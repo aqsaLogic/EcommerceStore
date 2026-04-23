@@ -6,7 +6,7 @@ const products = [
         description: "Goody fragrance with perfect long lasting"
     },
      {
-        id: 1,
+        id: 2,
         name: "Watch",
         imageurl: "",
         description: "Smart stylish watch"
