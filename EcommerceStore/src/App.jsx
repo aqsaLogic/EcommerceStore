@@ -1,22 +1,41 @@
-import {  Routes, Route, Navigate } from "react-router-dom";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import ProductDetail from "./pages/ProductDetail";
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider }     from './context/AuthContext'
+import { ProductProvider }  from './context/ProductContext'
+import ProtectedRoute       from './components/ProtectedRoute'
+import LoginPage            from './pages/LoginPage'
+import Dashboard            from './pages/Dashboard'
+import ProductDetail        from './pages/ProductDetail'
 
-function App() {
+export default function App() {
   return (
-   <Routes>
+    <AuthProvider>
+      <ProductProvider>
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
 
-    <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/login" element={<LoginPage />} />
 
-     <Route path="/login" element={<Login />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
 
-     <Route path="/dashboard" element={<Dashboard />} />
+          <Route
+            path="/product/:id"
+            element={
+              <ProtectedRoute>
+                <ProductDetail />
+              </ProtectedRoute>
+            }
+          />
 
-     <Route path="/product/:id" element={<ProductDetail />} />
-
-   </Routes>
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </ProductProvider>
+    </AuthProvider>
   )
 }
-
-export default App;
