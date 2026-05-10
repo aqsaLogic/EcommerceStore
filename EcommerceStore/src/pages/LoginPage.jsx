@@ -94,7 +94,7 @@ export default function LoginPage() {
 
           {/* Mobile ka logo (hide on lg) */} 
           <div className="lg:hidden text-center mb-10">
-            <h1 className="font-display text-5xl font-bold text-white">LUXE</h1>
+            <h1 className="font-display text-5xl font-bold text-white">My</h1>
             <div className="w-8 h-px bg-gold mx-auto mt-3" />
           </div>
 
@@ -160,7 +160,7 @@ export default function LoginPage() {
                            relative overflow-hidden"
               >
                 {loading ? (
-                  // Loading s
+                  // Loading 
                   <span className="flex items-center justify-center gap-2">
                     <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
