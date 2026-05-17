@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useProducts } from '../context/ProductContext'
 import Card from '../components/Card'
+import { useCart } from '../context/CartContext'
 
 const emptyForm = {
   name: '',
@@ -16,8 +17,9 @@ export default function Dashboard() {
   const { user, logout } = useAuth()
   const { products, loading, error, addProduct, updateProduct, deleteProduct } = useProducts()
   const navigate = useNavigate()
+  const { totalItems } = useCart()
 
-  // Modal state — 'add', 'edit', or null
+  // Modal state — add, edit, or null
   const [modalMode, setModalMode] = useState(null)
   const [editingProduct, setEditingProduct] = useState(null)
   const [form, setForm] = useState(emptyForm)
@@ -138,10 +140,14 @@ export default function Dashboard() {
 
       {/* Navbar */}
       <header className="navbar">
-        <span className="navbar-brand">LUXE <span>Store</span></span>
+        <span className="navbar-brand">My <span>Store</span></span>
         <div className="navbar-right">
           <span className="navbar-greeting">Hi, <strong>{user?.name}</strong></span>
           <img className="navbar-avatar" src={user?.avatar} alt={user?.name} />
+          <button className="cart-icon-btn" onClick={() => navigate('/cart')}>
+            🛒 Cart
+            {totalItems > 0 && <span className="cart-badge">{totalItems}</span>}
+          </button>
           <button className="logout-btn" onClick={handleLogout}>Logout</button>
         </div>
       </header>
@@ -151,7 +157,7 @@ export default function Dashboard() {
         {/* Welcome */}
         <div>
           <p className="welcome-label">{user?.role}</p>
-          <h1 className="welcome-heading">Welcome, {user?.name?.split(' ')[0]} 👋</h1>
+          <h1 className="welcome-heading">Welcome, {user?.name?.split(' ')[0]}</h1>
           <p className="welcome-email">{user?.email}</p>
         </div>
 
@@ -164,12 +170,12 @@ export default function Dashboard() {
           </div>
           <div className="stat-card">
             <div className="stat-icon">💰</div>
-            <p className="stat-value">{loading ? '—' : `$${totalValue}`}</p>
+            <p className="stat-value">{loading ? '—' : `Rs.${totalValue}`}</p>
             <p className="stat-label">Total Value</p>
           </div>
           <div className="stat-card">
             <div className="stat-icon">🏷️</div>
-            <p className="stat-value">{loading ? '—' : `$${avgPrice}`}</p>
+            <p className="stat-value">{loading ? '—' : `Rs.${avgPrice}`}</p>
             <p className="stat-label">Avg Price</p>
           </div>
         </div>
@@ -241,7 +247,7 @@ export default function Dashboard() {
             </div>
 
             <form onSubmit={modalMode === 'add' ? handleAddProduct : handleUpdateProduct}>
-
+          
               <div className="input-group">
                 <label>Product Name *</label>
                 <input
@@ -255,7 +261,7 @@ export default function Dashboard() {
               </div>
 
               <div className="input-group">
-                <label>Price (USD) *</label>
+                <label>Price (PKR) *</label>
                 <input
                   type="number"
                   name="price"

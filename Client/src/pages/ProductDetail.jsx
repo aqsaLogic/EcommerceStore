@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useProducts } from '../context/ProductContext'
 import { useAuth } from '../context/AuthContext'
+import { useCart } from '../context/CartContext'
 
 const API_URL = 'http://localhost:5000/api'
 
@@ -10,6 +11,7 @@ export default function ProductDetail() {
   const navigate = useNavigate()
   const { selectedProduct, setSelectedProduct } = useProducts()
   const { user, logout } = useAuth()
+  const { addToCart, totalItems = 0 } = useCart()  // ← yeh add karo
 
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -76,6 +78,10 @@ export default function ProductDetail() {
           <span className="crumb">{product.name}</span>
         </nav>
         <div className="navbar-right">
+        <button className="cart-icon-btn" onClick={() => navigate('/cart')}>
+            🛒 Cart
+            {totalItems > 0 && <span className="cart-badge">{totalItems}</span>}
+          </button>
           <img className="navbar-avatar" src={user?.avatar} alt={user?.name} />
           <button className="logout-btn" onClick={handleLogout}>Logout</button>
         </div>
@@ -117,7 +123,7 @@ export default function ProductDetail() {
             </div>
 
             <div className="detail-actions">
-              <button className="cart-btn">Add to Cart</button>
+              <button className="cart-btn" onClick={() => { addToCart(product); navigate('/cart') }}>Add to Cart</button>
               <button className="back-btn" onClick={() => navigate('/dashboard')}>
                 ← Dashboard
               </button>

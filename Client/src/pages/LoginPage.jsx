@@ -2,14 +2,16 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
+
 const API_URL = 'http://localhost:5000/api'
 
 export default function LoginPage() {
-  const [email,    setEmail]    = useState('')
+  const [email, setEmail]    = useState('')
   const [password, setPassword] = useState('')
-  const [error,    setError]    = useState('')
-  const [loading,  setLoading]  = useState(false)
+  const [error, setError]    = useState('')
+  const [loading, setLoading]  = useState(false)
   const [showPass, setShowPass] = useState(false)
+  const [isRegister, setIsRegister] = useState(false)
 
   const { login, user } = useAuth()
   const navigate        = useNavigate()
@@ -25,11 +27,13 @@ export default function LoginPage() {
   setLoading(true)
 
   try {
-    const response = await fetch(`${API_URL}/user/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    })
+    const url = isRegister ? `${API_URL}/user/create` : `${API_URL}/user/login`
+
+const response = await fetch(url, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ email, password }),
+})
 
     const data = await response.json()
 
@@ -43,9 +47,9 @@ export default function LoginPage() {
 
   } catch (err) {
     setError('Cannot connect to server.')
+  } finally {
+    setLoading(false)
   }
-
-  setLoading(false)
 }
 
   return (
@@ -70,68 +74,78 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Right — login form */}
-      <div className="login-right">
-        <div className="login-card">
-          <h2>Sign in</h2>
-          <p className="subtitle">Enter your credentials to continue.</p>
+ {/* Right — login form */}
+<div className="login-right">
+  <div className="login-card">
+    <h2>{isRegister ? 'Register' : 'Sign In'}</h2>
+    <p className="subtitle">Enter your credentials to continue.</p>
 
-          <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
 
-            {/* Email */}
-            <div className="input-group">
-              <label>Email</label>
-              <input
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-              />
-            </div>
+      {/* Email */}
+      <div className="input-group">
+        <label>Email</label>
+        <input
+          type="email"
+          placeholder="you@example.com"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          required
+        />
+      </div>
 
-            {/* Password */}
-            <div className="input-group">
-              <label>Password</label>
-              <div className="pass-wrap">
-                <input
-                  type={showPass ? 'text' : 'password'}
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  required
-                />
-                <button
-                  type="button"
-                  className="show-pass"
-                  onClick={() => setShowPass(p => !p)}
-                >
-                  {showPass ? 'Hide' : 'Show'}
-                </button>
-              </div>
-            </div>
-
-            {/* Error */}
-            {error && <div className="form-error">{error}</div>}
-
-            {/* Submit */}
-            <button type="submit" className="login-btn" disabled={loading}>
-              {loading ? (
-                <span className="login-spinner">
-                  <svg className="spin-icon" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25"/>
-                    <path fill="currentColor" opacity="0.75" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
-                  </svg>
-                  Signing in...
-                </span>
-              ) : 'Sign In →'}
-            </button>
-
-          </form>
-
-          <p className="login-hint">Demo: any email + 6+ char password</p>
+      {/* Password */}
+      <div className="input-group">
+        <label>Password</label>
+        <div className="pass-wrap">
+          <input
+            type={showPass ? 'text' : 'password'}
+            placeholder="••••••••"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            required
+          />
+          <button
+            type="button"
+            className="show-pass"
+            onClick={() => setShowPass(p => !p)}
+          >
+            {showPass ? 'Hide' : 'Show'}
+          </button>
         </div>
       </div>
-    </div>
+
+      {/* Error */}
+      {error && <div className="form-error">{error}</div>}
+
+      {/* Submit + Switch */}
+      <div className="auth-btns">
+        <button type="submit" className="login-btn" disabled={loading}>
+          {loading ? (
+            <span className="login-spinner">
+              <svg className="spin-icon" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25"/>=
+                <path fill="currentColor" opacity="0.75" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
+              </svg>
+              {isRegister ? 'Registering...' : 'Signing in...'}
+            </span>
+          ) : (isRegister ? 'Register' : 'Sign In →')}
+        </button>
+
+        <div className="auth-divider">or</div>
+
+        <button
+          type="button"
+          className="switch-btn"
+          onClick={() => { setIsRegister(p => !p); setError('') }}
+        >
+          {isRegister ? 'Already have account? Sign In' : 'New here? Register'}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+</div>
   )
 }
