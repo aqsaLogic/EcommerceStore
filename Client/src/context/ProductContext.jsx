@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 
-const API_URL = 'https://server-production-b1cd.up.railway.app/api/products'
+const API_URL = 'https://server-production-b1cd.up.railway.app/api'
 
 const ProductContext = createContext(null)
 

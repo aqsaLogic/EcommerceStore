@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 
-const API_URL = 'https://server-production-b1cd.up.railway.app/api/products'
+const API_URL = 'https://server-production-b1cd.up.railway.app/api'
 
 export default function LoginPage() {
   const [email, setEmail]    = useState('')

@@ -4,7 +4,7 @@ import { useProducts } from '../context/ProductContext'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 
-const API_URL = 'https://server-production-b1cd.up.railway.app/api/products'
+const API_URL = 'https://server-production-b1cd.up.railway.app/api'
 
 export default function ProductDetail() {
   const { id } = useParams()
